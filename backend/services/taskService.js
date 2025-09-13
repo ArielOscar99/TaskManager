@@ -1,41 +1,40 @@
-const taskRepo = require("../repositories/taskRepository");
+const Task = require("../models/Task");
 
-class TaskService {
-  async getTasks() {
-    try {
-      return await taskRepo.getAll();
-    } catch (error) {
-      console.error("Service error in getTasks:", error.message);
-      throw new Error("Could not retrieve tasks");
-    }
-  }
+const getTasks = async () => {
+  // uncompleted first, ordered by deadline ascending
+  // then completed, ordered by dateCreated descending
+  const tasks = await Task.find()
+    .sort({ completed: 1, deadline: 1, dateCreated: -1 });
+  return tasks;
+};
 
-  async createTask(taskData) {
-    try {
-      return await taskRepo.create(taskData);
-    } catch (error) {
-      console.error("Service error in createTask:", error.message);
-      throw new Error("Could not create task");
-    }
-  }
+const createTask = async (data) => {
+  const task = new Task(data);
+  return await task.save();
+};
 
-  async updateTask(id, taskData) {
-    try {
-      return await taskRepo.update(id, taskData);
-    } catch (error) {
-      console.error("Service error in updateTask:", error.message);
-      throw new Error("Could not update task");
-    }
-  }
+const updateTask = async (id, data) => {
+  return await Task.findByIdAndUpdate(id, data, { new: true });
+};
 
-  async deleteTask(id) {
-    try {
-      return await taskRepo.delete(id);
-    } catch (error) {
-      console.error("Service error in deleteTask:", error.message);
-      throw new Error("Could not delete task");
-    }
-  }
-}
+const deleteTask = async (id) => {
+  return await Task.findByIdAndDelete(id);
+};
 
-module.exports = new TaskService();
+const completeTask = async (id) => {
+  return await Task.findByIdAndUpdate(id, { completed: true }, { new: true });
+};
+
+const searchTask = async (query) => {
+  // case insensitive search
+  return await Task.find({ body: { $regex: query, $options: "i" } });
+};
+
+module.exports = {
+  getTasks,
+  createTask,
+  updateTask,
+  deleteTask,
+  completeTask,
+  searchTask,
+};
