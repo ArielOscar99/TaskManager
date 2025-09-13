@@ -1,4 +1,4 @@
-const Task = require("../models/Task");
+const Task = require("../enteties/Task");
 
 const getTasks = async () => {
   // uncompleted first, ordered by deadline ascending

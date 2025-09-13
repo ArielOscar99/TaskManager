@@ -1,7 +1,7 @@
 import React from "react";
 
-function AddTaskButton({ onClick }) {
-  return <button onClick={onClick}>Add New Task</button>;
+function AddTaskButton({ onAddClick }) {
+  return <button onClick={onAddClick}>Add New Task</button>;
 }
 
 export default AddTaskButton;

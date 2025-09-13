@@ -1,4 +1,4 @@
-const Task = require("../models/taskModel");
+const Task = require("../enteties/taskModel");
 
 class TaskRepository {
   async getAll() {
